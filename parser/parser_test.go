@@ -21,7 +21,7 @@ let foobar = *#*#*#;
 	}
 
 	if len(program.Statements) != 3 {
-		t.Fatalf("program.Statements does not contain 3 statemensts. got %d", len(progra.Statements))
+		t.Fatalf("program.Statements does not contain 3 statemensts. got %d", len(program.Statements))
 	}
 
 	tests := []struct {
@@ -32,8 +32,8 @@ let foobar = *#*#*#;
 		{"foobar"},
 	}
 
-	for i, tt := range test {
-		stmt := program.Statemetnts[i]
+	for i, tt := range tests {
+		stmt := program.Statements[i]
 		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
 			return
 		}
@@ -53,12 +53,12 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	}
 
 	if letStmt.Name.Value != name {
-		t.Error("letStmt.Name.Value not '%s', got %s", name, letStmt.Name.Value)
+		t.Errorf("letStmt.Name.Value not '%s', got %s", name, letStmt.Name.Value)
 		return false
 	}
 
 	if letStmt.Name.TokenLiteral() != name {
-		t.ErrorF("letStmt.Name.TokenLiteral() not '%s'. got %s", name, letStmt.Name.TokenLiteral())
+		t.Errorf("letStmt.Name.TokenLiteral() not '%s'. got %s", name, letStmt.Name.TokenLiteral())
 		return false
 	}
 
