@@ -6,7 +6,7 @@ import (
 	"github.com/zanshin/interpreter/token"
 )
 
-func TesString(t *testing.T) {
+func TestString(t *testing.T) {
 	program := &Program{
 		Statements: []Statement{
 			&LetStatement{
@@ -16,8 +16,8 @@ func TesString(t *testing.T) {
 					Value: "myVar",
 				},
 				Value: &Identifier{
-					Token: token.Token{Type: token.IDENT, Literal: "anotherVal"},
-					Value: "anotherVal",
+					Token: token.Token{Type: token.IDENT, Literal: "anotherVar"},
+					Value: "anotherVar",
 				},
 			},
 		},
