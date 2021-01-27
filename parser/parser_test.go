@@ -8,7 +8,6 @@ import (
 	"github.com/zanshin/interpreter/lexer"
 )
 
-// TestLetStatements {{{
 func TestLetStatements(t *testing.T) {
 	input := `
 let x = 5;
@@ -45,9 +44,6 @@ let foobar = 838383;
 	}
 }
 
-// }}}
-
-// testLetStatement {{{
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "let" {
 		t.Errorf("s.TokenLiteral not 'let'. got %q", s.TokenLiteral())
@@ -73,9 +69,6 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	return true
 }
 
-// }}}
-
-// TestReturnStatements {{{
 func TestReturnStatements(t *testing.T) {
 	input := `
 return 5;
@@ -106,9 +99,6 @@ return 993322;
 	}
 }
 
-// }}}
-
-// TestIdentifyExpression {{{
 func TestIdentiferExpression(t *testing.T) {
 	input := "foobar;"
 
@@ -139,9 +129,6 @@ func TestIdentiferExpression(t *testing.T) {
 	}
 }
 
-// }}}
-
-// TestIntegerLiteralExpression {{{
 func TestIntegerLiteralExpression(t *testing.T) {
 	input := "5;"
 
@@ -171,9 +158,6 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	}
 }
 
-// }}}
-
-// TestParsingPrefixExpressions {{{
 func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {
 		input        string
@@ -212,9 +196,6 @@ func TestParsingPrefixExpressions(t *testing.T) {
 	}
 }
 
-// }}}
-
-// TestParsingInfixExpressions {{{
 func TestParsingInfixExpressions(t *testing.T) {
 	infixTests := []struct {
 		input      string
@@ -266,9 +247,6 @@ func TestParsingInfixExpressions(t *testing.T) {
 	}
 }
 
-// }}}
-
-// testIntegerLiteral {{{
 func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	integ, ok := il.(*ast.IntegerLiteral)
 	if !ok {
@@ -289,9 +267,6 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 	return true
 }
 
-// }}}
-
-// checkParserErrors {{{
 func checkParserErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
@@ -305,5 +280,3 @@ func checkParserErrors(t *testing.T, p *Parser) {
 
 	t.FailNow()
 }
-
-// }}}
