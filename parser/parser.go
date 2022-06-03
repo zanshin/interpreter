@@ -8,6 +8,11 @@ import (
 	"github.com/zanshin/interpreter/token"
 )
 
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
 type Parser struct {
 	l *lexer.Lexer
 
@@ -15,6 +20,9 @@ type Parser struct {
 	peekToken token.Token
 
 	errors []string
+
+	prefixParseFns map[token.TokenType]prefixParseFn
+	infixParseFns  map[token.TokenType]infixParseFn
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -97,10 +105,12 @@ func (p *Parser) ParseReturnStatement() *ast.ReturnStatement {
 	return stmt
 }
 
+// Determine is the current Token matches the expected Token
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
 
+// Determine if the peek Token matches the expected Token
 func (p *Parser) peekTokenIs(t token.TokenType) bool {
 	return p.peekToken.Type == t
 }
@@ -115,11 +125,23 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 	}
 }
 
+// Return any errors on the Parser
 func (p *Parser) Errors() []string {
 	return p.errors
 }
 
+// Construct error message when peek Token isn't what was expected
 func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("Expected next token to be %s, got %s instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
+}
+
+// Registers an outfix parse function for the TokenType specified
+func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+
+// Registers an infix parse function for the TokenType specified
+func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
+	p.infixParseFns[tokenType] = fn
 }
