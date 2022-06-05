@@ -37,12 +37,11 @@ type (
 )
 
 type Parser struct {
-	l *lexer.Lexer
+	l      *lexer.Lexer
+	errors []string
 
 	curToken  token.Token
 	peekToken token.Token
-
-	errors []string
 
 	prefixParseFns map[token.TokenType]prefixParseFn
 	infixParseFns  map[token.TokenType]infixParseFn
@@ -120,6 +119,10 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
+
+	p.nextToken()
+
+	stmt.Value = p.parseExpression(LOWEST)
 
 	// TODO: We're skipping expressions until we
 	// encounter a semicolon
