@@ -1,0 +1,77 @@
+package evaluator
+
+import (
+	"testing"
+
+	"github.com/zanshin/interpreter/lexer"
+	"github.com/zanshin/interpreter/object"
+	"github.com/zanshin/interpreter/parser"
+)
+
+func TestEvalIntegerExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"5", 5},
+		{"10", 10},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestEvalBooleanExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		expexted bool
+	}{
+		{"true", true},
+		{"false", false},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testBooleanObject(t, evaluated, tt.expexted)
+	}
+}
+
+func testEval(input string) object.Object {
+	l := lexer.New(input)
+	p := parser.New(l)
+	program := p.ParseProgram()
+
+	return Eval(program)
+}
+
+func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
+	result, ok := obj.(*object.Integer)
+	if !ok {
+		t.Errorf("object is not Integer, got %T (%+v)", obj, obj)
+		return false
+	}
+
+	if result.Value != expected {
+		t.Errorf("object has the wrong value, got %d, wanted %d", result.Value, expected)
+		return false
+	}
+
+	return true
+}
+
+func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
+	result, ok := obj.(*object.Boolean)
+	if !ok {
+		t.Errorf("object is not Boolean, got %t (%+v)", obj, obj)
+		return false
+	}
+
+	if result.Value != expected {
+		t.Errorf("object has the wrong value, got %t, wanted %t", result.Value, expected)
+		return false
+	}
+
+	return true
+}
